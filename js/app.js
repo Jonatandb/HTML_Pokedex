@@ -1,28 +1,33 @@
 const API_URL = 'https://pokeapi.co/api/v2/pokemon/'
 const listaPokemon = document.querySelector('#lista-pokemon')
+const botonesHeader = document.querySelectorAll('.btn')
+const allPokemon = []
 
-for (let i = 1; i <=151; i++) {
+for (let i = 1; i <= 151; i++) {
   fetch(API_URL + i)
     .then(response => response.json())
-    .then(data => mostrarPokemon(data))
+    .then(data => {
+      allPokemon.push(data)
+      mostrarPokemon(data)
+    })
 }
 
 function mostrarPokemon({
-    name,
-    weight,
-    height,
-    types,
-    id,
-    sprites: {
-      other: {
-        'official-artwork': {
-          front_default
-        }
+  name,
+  weight,
+  height,
+  types,
+  id,
+  sprites: {
+    other: {
+      'official-artwork': {
+        front_default
       }
     }
-  }) {
+  }
+}) {
 
-  const tipos = types.map(({ type: { name}}) => {
+  const tipos = types.map(({ type: { name } }) => {
     return `<p class='tipo ${name}'>${name.toUpperCase()}</p>`
   })
 
@@ -56,3 +61,25 @@ function mostrarPokemon({
 
   listaPokemon.appendChild(div)
 }
+
+function mostrarPorTipo(btnID) {
+  allPokemon.sort((p1, p2) => {
+    return p1.id < p2.id ? -1 : 1
+  })
+  listaPokemon.innerHTML = ''
+  if (btnID == 'ver-todos') {
+    allPokemon.forEach(pokemon => mostrarPokemon(pokemon))
+  } else {
+    allPokemon.forEach(pokemon => {
+      pokemon.types.forEach(({ type }) => {
+        if (type.name.includes(btnID)) {
+          mostrarPokemon(pokemon)
+        }
+      })
+    })
+  }
+}
+
+botonesHeader.forEach(btn => {
+  btn.addEventListener('click', e => mostrarPorTipo(e.currentTarget.id))
+})
