@@ -1,4 +1,7 @@
 ## Pokédex
-- HTML, CSS, JavaScript
+- Responsive design, HTML, CSS, JavaScript
 
 ![Screenshot](Screenshot.png)
+
+
+![Preview](Preview.gif)
